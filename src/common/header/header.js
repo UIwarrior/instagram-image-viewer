@@ -7,7 +7,7 @@ import InputBase from '@material-ui/core/InputBase';
 import { withStyles } from "@material-ui/core/styles";
 import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
-import AccountCircle from '@material-ui/icons/AccountCircle';
+import profileImage from '../../assets/instaprofilepic.jpeg';
 
 
 const styles = (theme) => ({
@@ -62,18 +62,21 @@ const Header = (props) => {
     const { classes } = props;
     return (
         <div className ="header">
-        <span className="logo">{props.logoName}</span>
+  
         <Grid container spacing={1} alignItems="flex-end">
+        <Grid item xs={10}><span className="logo">{props.logoName}</span></Grid>
+        <Grid item xs={1}>
         <Input
+          onChange = {props.triggerSearch}
           id="input-with-icon-adornment"
           startAdornment={
-            <InputAdornment position="start">
+            <InputAdornment position="start" >
               <SearchIcon />
             </InputAdornment>
           }
-        />
+        /></Grid>
+          <Grid item xs={1}><Avatar src={profileImage} alt="arnab" /></Grid>
         </Grid>
-        <Avatar alt="Remy Sharp">AS</Avatar>
         </div>
     )
 }

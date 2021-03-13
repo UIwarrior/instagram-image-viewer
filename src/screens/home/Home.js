@@ -34,6 +34,33 @@ class Home extends Component {
     };
     this.incrementLikes = this.incrementLikes.bind(this);
     this.addComment = this.addComment.bind(this);
+    this.callSearch = this.callSearch.bind(this);
+  }
+
+
+  callSearch(e){
+    console.log("performing search", e.target.value);
+    if(e.target.value === null || e.target.value === ""){
+        console.log(mockData);
+        this.setState({
+            instaImages:mockData.instaImages
+          }); 
+    }
+    else{
+        let filteredArray = this.state.instaImages.filter(val => val.caption.toLowerCase().indexOf(e.target.value.toLowerCase()) > -1 );
+        this.setState({
+            instaImages:filteredArray
+          });
+    }
+    
+  }
+
+  getCaptionTags(id){
+    const matchedCaption = this.state.mediaApiResponse.find((val) => val.id === id);
+    if (matchedCaption) {
+      return matchedCaption.caption;
+    }
+
   }
 
   getCaption(id) {
@@ -121,6 +148,7 @@ class Home extends Component {
                   id: imageDetails.id,
                   userName: imageDetails.username,
                   likeColor: 'grey',
+                  captionTags: this.getCaptionTags(imageDetails.id)
                 });
             }
             else{
@@ -142,7 +170,7 @@ class Home extends Component {
     const { classes } = this.props;
     return (
       <React.Fragment>
-        <Header logoName="Image Viewer" />
+        <Header logoName="Image Viewer" triggerSearch = {this.callSearch}/>
         <Grid item xs={12} className={classes.root} spacing={2}>
           <Grid container className = {classes.parentContainer} justify="center" spacing={4}>
             {this.state.instaImages &&
