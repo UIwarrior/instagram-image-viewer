@@ -11,6 +11,7 @@ import { red } from '@material-ui/core/colors';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { withStyles } from '@material-ui/core/styles';
 import profileImage from '../../assets/instaprofilepic.jpeg';
+import { Button, Grid, TextField } from '@material-ui/core';
 
 const styles = (theme) => ({
   root: {
@@ -57,6 +58,7 @@ const HomeCard = (props) => {
         </IconButton>
         <span>{props.likes} likes</span>
       </CardActions>
+      <Grid><TextField id="standard-basic" label="Add a comment" /><Button variant="contained" color="primary">Add</Button></Grid>
     </Card>
   );
 };
