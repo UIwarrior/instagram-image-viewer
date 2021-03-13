@@ -1,34 +1,65 @@
 import React from 'react';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
+import CardActions from '@material-ui/core/CardActions';
+import Avatar from '@material-ui/core/Avatar';
+import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+import { red } from '@material-ui/core/colors';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 import { withStyles } from '@material-ui/core/styles';
-import './index.css';
-import SignIn from '../form';
-import Header from '../header/header';
+import profileImage from '../../assets/instaprofilepic.jpeg';
 
-const styles = ({
+const styles = (theme) => ({
   root: {
-    minWidth: 275,
+    minWidth: 350,
+    maxWidth: 350,
+    margin: '20px'
+  },
+  media: {
+    height: 0,
+    paddingTop: '56.25%', // 16:9
+  },
+  avatar: {
+    backgroundColor: red[500],
   },
 });
 
-const SimpleCard = (props) => {
-
-const { classes, history } = props;
-
+const HomeCard = (props) => {
+  const { classes } = props;
   return (
-    <div className="parentContainer">  
     <Card className={classes.root}>
+      <CardHeader
+        avatar={
+          <Avatar alt="AS" src={profileImage} />
+        }
+        title={props.userName}
+        subheader={props.date}
+      />
+      <CardMedia
+        className={classes.media}
+        image={props.media_url}
+        title={props.caption}
+      />
       <CardContent>
-       <SignIn history = {history} />
+      <Typography variant="body2" color="textPrimary" component="p">
+          {props.caption}
+        </Typography>
+        <Typography variant="body2" color="textSecondary" component="p">
+          {props.tags}
+        </Typography>
       </CardContent>
+      <CardActions disableSpacing>
+        <IconButton aria-label="add to favorites" onClick={() => props.incrementLikes(props.likes)}>
+          <FavoriteIcon />
+        </IconButton>
+        <span>{props.likes} likes</span>
+      </CardActions>
     </Card>
-    </div>
   );
-}
+};
 
-export default withStyles(styles)(SimpleCard);
+export default withStyles(styles)(HomeCard);
 

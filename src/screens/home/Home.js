@@ -1,7 +1,145 @@
-import React from 'react';
- 
-const Home = () => {
-    return <div>Welcome to Home Page</div>
+import React, { Component } from "react";
+import Grid from "@material-ui/core/Grid";
+import { withStyles } from "@material-ui/core/styles";
+import HomeCard from "../../common/card/index";
+import Header from "../../common/header/header";
+import { credentials } from "../../credentials";
+import api from "../../utils/api";
+import mockData from '../../mock-data.json';
+import "./Home.css";
+
+const styles = (theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  parentContainer: { 
+    width: '60%',
+    margin: 'auto',
+  },
+  paper: {
+    height: 140,
+    width: 100,
+  },
+  control: {
+    padding: theme.spacing.unit * 2,
+  },
+});
+
+class Home extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      instaImages: [],
+      mediaApiResponse: [],
+    };
+  }
+
+  getCaption(id) {
+    const matchedCaption = this.state.mediaApiResponse.find((val) => val.id === id);
+    if (matchedCaption) {
+      return matchedCaption.caption.split("\n")[0];
+    }
+
+    return "";
+  }
+
+  getLikes() {
+    return Math.floor(Math.random() * 1000)
+  }
+
+  getTags(id) {
+    const found = this.state.mediaApiResponse.find((val) => val.id === id);
+    if (found) {
+      return found.caption.split("\n")[1];
+    }
+    return "";
+  }
+
+  convertDateTime(_date){
+    const now = new Date(_date);
+    const date = now.toLocaleDateString();
+    const time = now.toLocaleTimeString();
+    console.log("date and time",date, time);
+    return date + ' ' + time;
+  }
+
+  componentDidMount() {
+    const finalImages = [];
+    api
+      .get("/me/media", {
+        params: {
+          fields: "id,caption",
+          access_token: credentials.accessToken,
+        },
+      })
+      .then(async (response) => {
+        console.log("image array insta response", response.data.data);
+        this.setState({
+          mediaApiResponse: response.data.data,
+        });
+        await Promise.all(
+          response.data.data.map(async (val) => {
+            const _response = await api.get(`/${val.id}`, {
+              params: {
+                fields: "id,media_type,media_url,username,timestamp",
+                access_token: credentials.accessToken,
+              },
+            });
+            if(_response){
+                const imageDetails = await _response.data;
+                finalImages.push({
+                  media_url: imageDetails.media_url,
+                  date: this.convertDateTime(imageDetails.timestamp),
+                  caption: this.getCaption(imageDetails.id),
+                  tags: this.getTags(imageDetails.id),
+                  likes: this.getLikes(),
+                  comments: [],
+                  id: imageDetails.id,
+                  userName: imageDetails.username
+                });
+            }
+            else{
+                console.log("second API error happened");
+            }
+          })
+        );
+        this.setState({ instaImages: finalImages });
+        console.log("this.state", this.state);
+      }).catch(error => {
+          console.log("first API error", mockData);
+          this.setState({ instaImages: mockData.instaImages });
+      })
+  }
+
+  incrementLikes(params){
+    console.log("increment likes kicks in", params);
+  }
+
+
+  render() {
+    const { classes } = this.props;
+    return (
+      <React.Fragment>
+        <Header logoName="Image Viewer" />
+        <Grid item xs={12} className={classes.root} spacing={2}>
+          <Grid container className = {classes.parentContainer} justify="center" spacing={4}>
+            {this.state.instaImages &&
+              this.state.instaImages.map((val) => (
+                <HomeCard
+                  media_url={val.media_url}
+                  caption={val.caption}
+                  tags={val.tags}
+                  likes={val.likes}
+                  date={val.date}
+                  userName = {val.userName}
+                  incrementLikes = {this.incrementLikes}
+                />
+              ))}
+          </Grid>
+        </Grid>
+      </React.Fragment>
+    );
+  }
 }
 
-export default Home;
+export default withStyles(styles)(Home);
