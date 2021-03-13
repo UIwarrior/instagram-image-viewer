@@ -8,7 +8,10 @@ import { withStyles } from "@material-ui/core/styles";
 import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-
+import profileImage from '../../assets/instaprofilepic.jpeg';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import { IconButton } from '@material-ui/core';
 
 const styles = (theme) => ({
     root: {
@@ -22,60 +25,63 @@ const styles = (theme) => ({
         display: 'block',
       },
     },
-    search: {
-        width: '300px',
-        position: 'relative',
-        marginLeft: 0,
-        borderRadius: '4px',
-        top: '0px',
-
-    },
-    searchIcon: {
-        height: '100%',
-        padding: '4px 0px 20px 10px',
-        display: 'flex',
-        position: 'absolute',
-        alignItems: 'center',
-        pointerEvents: 'none',
-        justifyContent: 'center',
-    },
-    inputRoot: {
-      color: 'inherit',
-    },
-    inputInput: {
-      padding: '5px',
-      borderRadius: '7px',
-      // vertical padding + font size from searchIcon
-      paddingLeft: '10px',
-      transition: theme.transitions.create('width'),
-      width: '100%',
-      [theme.breakpoints.up('sm')]: {
-        width: '12ch',
-        '&:focus': {
-          width: '20ch',
-        },
-      },
-    },
   });
 
-const Header = (props) => {
-    const { classes } = props;
-    return (
-        <div className ="header">
-        <span className="logo">{props.logoName}</span>
-        <Grid container spacing={1} alignItems="flex-end">
-        <Input
-          id="input-with-icon-adornment"
-          startAdornment={
-            <InputAdornment position="start">
-              <SearchIcon />
-            </InputAdornment>
-          }
-        />
-        </Grid>
-        <Avatar alt="Remy Sharp">AS</Avatar>
-        </div>
-    )
+class Header extends React.Component{
+
+   constructor(props) {
+     super(props);
+     this.state = {
+      anchorEl: null,
+     }
+   }
+
+   handleClick = (e) => {
+     this.setState({
+       anchorEl:e.currentTarget
+     })
+   }
+
+   handleClose = () => {
+    this.setState({
+      anchorEl: null
+    })
+   }
+    render() {
+      const { anchorEl } = this.state;
+      const { logoName , triggerSearch} = this.props;
+      return (
+          <div className ="header">
+    
+          <Grid container spacing={1} alignItems="flex-end">
+          <Grid item xs={10}><span className="logo">{logoName}</span></Grid>
+          <Grid item xs={1}>
+          <Input
+            onChange = {triggerSearch}
+            id="input-with-icon-adornment"
+            startAdornment={
+              <InputAdornment position="start" >
+                <SearchIcon />
+              </InputAdornment>
+            }
+          /></Grid>
+            <Grid item xs={1}><Avatar src={profileImage} alt="arnab" onClick={this.handleClick}  />
+            <Menu
+          id="simple-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={this.handleClose}
+        >
+          <MenuItem onClick={this.handleClose}>My account</MenuItem>
+          <MenuItem onClick={this.handleClose}>Logout</MenuItem>
+        </Menu>
+            </Grid>
+          </Grid>
+          </div>
+      )
+    }
+
 }
 
 export default withStyles(styles)(Header);

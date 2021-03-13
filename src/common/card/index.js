@@ -31,7 +31,11 @@ const styles = (theme) => ({
 
 const HomeCard = (props) => {
   const { classes } = props;
+<<<<<<< Updated upstream
   console.log("props", props);
+=======
+  console.log("props", props)
+>>>>>>> Stashed changes
   return (
     <Card className={classes.root}>
       <CardHeader
@@ -61,7 +65,7 @@ const HomeCard = (props) => {
         <span>{props.likes} likes</span>
       </CardActions>
       <CardActions disableSpacing>
-     <TextField id="standard-basic" label="Add a comment"/><Button variant="contained" color="primary" onClick ={() => props.addComment(props.id,'comment sample', props.userName)}>Add</Button>
+     <TextField id="standard-basic" label="Add a comment" onChange={(e) =>props.getComments(e.target.value)}/><Button variant="contained" color="primary" onClick ={() => props.addComment(props.id, props.userName)}>Add</Button>
       </CardActions>
       <Typography variant="body2" color="textPrimary" component="p">
           {props.comments && props.comments.map(val => (

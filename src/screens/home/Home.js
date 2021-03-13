@@ -31,9 +31,36 @@ class Home extends Component {
     this.state = {
       instaImages: [],
       mediaApiResponse: [],
+      comment: ''
     };
     this.incrementLikes = this.incrementLikes.bind(this);
     this.addComment = this.addComment.bind(this);
+    this.callSearch = this.callSearch.bind(this);
+    this.getComments = this.getComments.bind(this);
+  }
+
+
+  callSearch(e){
+    if(e.target.value === null || e.target.value === ""){
+        this.setState({
+            instaImages:mockData.instaImages
+          }); 
+    }
+    else{
+        let filteredArray = this.state.instaImages.filter(val => val.caption.toLowerCase().indexOf(e.target.value.toLowerCase()) > -1 );
+        this.setState({
+            instaImages:filteredArray
+          });
+    }
+    
+  }
+
+  getCaptionTags(id){
+    const matchedCaption = this.state.mediaApiResponse.find((val) => val.id === id);
+    if (matchedCaption) {
+      return matchedCaption.caption;
+    }
+
   }
 
   getCaption(id) {
@@ -57,6 +84,14 @@ class Home extends Component {
     return "";
   }
 
+  getComments(e){
+    console.log("comments",e);
+    this.setState({
+        comment:e
+    })
+  }
+
+
   convertDateTime(_date){
     const now = new Date(_date);
     const date = now.toLocaleDateString();
@@ -65,16 +100,17 @@ class Home extends Component {
     return date + ' ' + time;
   }
 
-  addComment(id, commentObj, user){
+  addComment(id, user){
     console.log("adding", id);
     let commentedImage = this.state.instaImages.find(val => val.id === id);
     commentedImage.comments.push({
-        comment: commentObj,
+        comment: this.state.comment,
         user,
     });
     this.setState(prevState => ({
         instaImages: [...prevState.instaImages, commentedImage]
       }));
+      console.log("this.state after posting comment", this.state)
   }
 
   incrementLikes(params, id){
@@ -158,6 +194,8 @@ class Home extends Component {
                   addComment = {this.addComment}
                   id={val.id}
                   likeColor ={val.likeColor}
+                  comments = {val.comments}
+                  getComments = {this.getComments}
                 />
               ))}
           </Grid>
