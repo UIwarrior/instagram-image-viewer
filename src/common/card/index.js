@@ -8,6 +8,7 @@ import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { withStyles } from '@material-ui/core/styles';
 import profileImage from '../../assets/instaprofilepic.jpeg';
@@ -30,6 +31,7 @@ const styles = (theme) => ({
 
 const HomeCard = (props) => {
   const { classes } = props;
+  console.log("props", props);
   return (
     <Card className={classes.root}>
       <CardHeader
@@ -53,12 +55,19 @@ const HomeCard = (props) => {
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites" onClick={() => props.incrementLikes(props.likes)}>
-          <FavoriteIcon />
+        <IconButton aria-label="add to favorites" onClick={() => props.incrementLikes(props.likes, props.id)}>
+          <FavoriteBorderIcon/>
         </IconButton>
         <span>{props.likes} likes</span>
       </CardActions>
-      <Grid><TextField id="standard-basic" label="Add a comment" /><Button variant="contained" color="primary">Add</Button></Grid>
+      <CardActions disableSpacing>
+     <TextField id="standard-basic" label="Add a comment"/><Button variant="contained" color="primary" onClick ={() => props.addComment(props.id,'comment sample', props.userName)}>Add</Button>
+      </CardActions>
+      <Typography variant="body2" color="textPrimary" component="p">
+          {props.comments && props.comments.map(val => (
+            <span>{val.user}: {val.comment}</span>
+          ))}
+        </Typography>
     </Card>
   );
 };

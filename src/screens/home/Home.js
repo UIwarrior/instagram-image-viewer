@@ -32,6 +32,8 @@ class Home extends Component {
       instaImages: [],
       mediaApiResponse: [],
     };
+    this.incrementLikes = this.incrementLikes.bind(this);
+    this.addComment = this.addComment.bind(this);
   }
 
   getCaption(id) {
@@ -63,6 +65,28 @@ class Home extends Component {
     return date + ' ' + time;
   }
 
+  addComment(id, commentObj, user){
+    console.log("adding", id);
+    let commentedImage = this.state.instaImages.find(val => val.id === id);
+    commentedImage.comments.push({
+        comment: commentObj,
+        user,
+    });
+    this.setState(prevState => ({
+        instaImages: [...prevState.instaImages, commentedImage]
+      }));
+  }
+
+  incrementLikes(params, id){
+    console.log("increment likes kicks in", id, this.state);
+    let likedImage = this.state.instaImages.find(val => val.id === id);
+    likedImage.likes = likedImage.likes + 1;
+    likedImage.likeColor = 'red';
+    
+    this.setState(prevState => ({
+        instaImages: [...prevState.instaImages, likedImage]
+      }));
+  }
   componentDidMount() {
     const finalImages = [];
     api
@@ -95,7 +119,8 @@ class Home extends Component {
                   likes: this.getLikes(),
                   comments: [],
                   id: imageDetails.id,
-                  userName: imageDetails.username
+                  userName: imageDetails.username,
+                  likeColor: 'grey',
                 });
             }
             else{
@@ -111,9 +136,6 @@ class Home extends Component {
       })
   }
 
-  incrementLikes(params){
-    console.log("increment likes kicks in", params);
-  }
 
 
   render() {
@@ -133,6 +155,9 @@ class Home extends Component {
                   date={val.date}
                   userName = {val.userName}
                   incrementLikes = {this.incrementLikes}
+                  addComment = {this.addComment}
+                  id={val.id}
+                  likeColor ={val.likeColor}
                 />
               ))}
           </Grid>
