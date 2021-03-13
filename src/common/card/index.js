@@ -31,11 +31,6 @@ const styles = (theme) => ({
 
 const HomeCard = (props) => {
   const { classes } = props;
-<<<<<<< Updated upstream
-  console.log("props", props);
-=======
-  console.log("props", props)
->>>>>>> Stashed changes
   return (
     <Card className={classes.root}>
       <CardHeader
