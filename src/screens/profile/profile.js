@@ -6,7 +6,7 @@ import Header from "../../common/header/header";
 import { credentials } from "../../credentials";
 import api from "../../utils/api";
 import mockData from '../../mock-data.json';
-import { Avatar, GridList, GridListTile, Modal, Typography } from "@material-ui/core";
+import { Avatar, Button, GridList, GridListTile, Modal, TextField, Typography } from "@material-ui/core";
 import profileImage from '../../assets/instaprofilepic.jpeg';
 import EditIcon from '@material-ui/icons/Edit';
 import Fab from '@material-ui/core/Fab';
@@ -43,12 +43,17 @@ class Profile extends Component {
       followers: 0,
       noOfPeopleFollowed: 0,
       fullName: "Arnab Sadhya",
+      changedName: '',
+      imageModalFlag: false,
       editModalFlag: false,
+      clickedImageObj: {}
     };
     this.incrementLikes = this.incrementLikes.bind(this);
     this.addComment = this.addComment.bind(this);
     this.callSearch = this.callSearch.bind(this);
     this.getComments = this.getComments.bind(this);
+    this.updateFullName = this.updateFullName.bind(this);
+    this.changeNameHandler = this.changeNameHandler.bind(this); 
   }
 
 
@@ -144,8 +149,26 @@ class Profile extends Component {
     this.setState({editModalFlag: false});
   };
 
+ updateFullName(){
+   this.setState({
+     fullName:this.state.changedName
+   })
+ }
 
+ changeNameHandler(e){
+   this.setState({
+      changedName: e.target.value
+   })
+ }
 
+ openImageModal(imageObj){
+  this.setState({
+    imageModalFlag: true,
+    clickedImageObj: imageObj
+  })
+
+ }
+ 
 
   componentDidMount() {
     const finalImages = [];
@@ -201,9 +224,32 @@ class Profile extends Component {
     return (
       <React.Fragment>
         <Header logoName="Image Viewer" />  
-        <ModalComponent open ={this.state.editModalFlag} handleClose = {this.handleClose}>
-           <div>{this.state.fullName}</div>
+        <ModalComponent modalTitle="Edit" open ={this.state.editModalFlag} handleClose = {this.handleClose}>
+             <TextField id="standard-basic" label="Full Name" onChange ={this.changeNameHandler}/>
+            <Button variant="contained" color="primary" onClick = {this.updateFullName}>
+            UPDATE
+          </Button>
           </ModalComponent>  
+
+
+          <ModalComponent modalTitle="Edit" open ={this.state.imageModalFlag} handleClose = {this.handleClose}>
+           <HomeCard
+                  media_url={this.state.clickedImageObj.media_url}
+                  caption={this.state.clickedImageObj.caption}
+                  tags={this.state.clickedImageObj.tags}
+                  likes={this.state.clickedImageObj.likes}
+                  date={this.state.clickedImageObj.date}
+                  userName = {this.state.clickedImageObj.userName}
+                  incrementLikes = {this.incrementLikes}
+                  addComment = {this.addComment}
+                  id={this.state.clickedImageObj.id}
+                  likeColor ={this.state.clickedImageObj.likeColor}
+                  comments = {this.state.clickedImageObj.comments}
+                  getComments = {this.getComments}
+                />
+          </ModalComponent>  
+
+
 
         <Grid item xs={12} className={classes.root} spacing={2}>
         <Grid className={classes.profile}>
@@ -222,7 +268,7 @@ class Profile extends Component {
             {this.state.instaImages &&
               this.state.instaImages.map((val) => (
                 <GridListTile key={val.media_url} cols={val.cols || 1}>
-                        <img src={val.media_url} alt={val.caption} />
+                        <img onClick={() =>this.openImageModal(val)} src={val.media_url} alt={val.caption} />
               </GridListTile>
               ))}
               </GridList>
