@@ -31,14 +31,13 @@ class Home extends Component {
     this.state = {
       instaImages: [],
       mediaApiResponse: [],
-      comment: ''
+      comment: '',
     };
     this.incrementLikes = this.incrementLikes.bind(this);
     this.addComment = this.addComment.bind(this);
     this.callSearch = this.callSearch.bind(this);
     this.getComments = this.getComments.bind(this);
   }
-
 
   callSearch(e){
     if(e.target.value === null || e.target.value === ""){

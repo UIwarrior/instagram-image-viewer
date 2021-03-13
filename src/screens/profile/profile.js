@@ -10,6 +10,7 @@ import { Avatar, GridList, GridListTile, Modal, Typography } from "@material-ui/
 import profileImage from '../../assets/instaprofilepic.jpeg';
 import EditIcon from '@material-ui/icons/Edit';
 import Fab from '@material-ui/core/Fab';
+import ModalComponent from "../../common/modal/modal";
 
 const styles = (theme) => ({
   root: {
@@ -41,7 +42,8 @@ class Profile extends Component {
       comment: '',
       followers: 0,
       noOfPeopleFollowed: 0,
-      fullName: "Arnab Sadhya"
+      fullName: "Arnab Sadhya",
+      editModalFlag: false,
     };
     this.incrementLikes = this.incrementLikes.bind(this);
     this.addComment = this.addComment.bind(this);
@@ -133,6 +135,18 @@ class Profile extends Component {
         instaImages: [...prevState.instaImages, likedImage]
       }));
   }
+
+  handleOpen = () => {
+    this.setState({editModalFlag: true});
+  };
+
+  handleClose = () => {
+    this.setState({editModalFlag: false});
+  };
+
+
+
+
   componentDidMount() {
     const finalImages = [];
     api
@@ -180,16 +194,17 @@ class Profile extends Component {
           console.log("first API error", mockData);
           this.setState({ instaImages: mockData.instaImages });
       })
-  }
-
-
+  };
 
   render() {
     const { classes } = this.props;
     return (
       <React.Fragment>
-        <Header logoName="Image Viewer" />
-        
+        <Header logoName="Image Viewer" />  
+        <ModalComponent open ={this.state.editModalFlag} handleClose = {this.handleClose}>
+           <div>{this.state.fullName}</div>
+          </ModalComponent>  
+
         <Grid item xs={12} className={classes.root} spacing={2}>
         <Grid className={classes.profile}>
         <Avatar src={profileImage} />
@@ -198,7 +213,7 @@ class Profile extends Component {
         <Typography>Follows:{this.state.instaImages[0] && this.state.noOfPeopleFollowed}</Typography>
         <Typography>Followed By:{this.state.instaImages[0] && this.state.followers}</Typography>
         <Typography>{this.state.instaImages[0] && this.state.fullName} <Fab color="secondary" aria-label="edit">
-        <EditIcon />
+        <EditIcon onClick = {this.handleOpen}/>
       </Fab></Typography>
         
         </Grid>
