@@ -85,7 +85,6 @@ class Home extends Component {
   }
 
   getComments(e){
-    console.log("comments",e);
     this.setState({
         comment:e
     })
@@ -96,12 +95,10 @@ class Home extends Component {
     const now = new Date(_date);
     const date = now.toLocaleDateString();
     const time = now.toLocaleTimeString();
-    console.log("date and time",date, time);
     return date + ' ' + time;
   }
 
   addComment(id, user){
-    console.log("adding", id);
     let commentedImage = this.state.instaImages.find(val => val.id === id);
     commentedImage.comments.push({
         comment: this.state.comment,
@@ -110,7 +107,6 @@ class Home extends Component {
     this.setState(prevState => ({
         instaImages: [...prevState.instaImages, commentedImage],
       }));
-      console.log("this.state", this.state);
       document.getElementById("addCommentInput").val = "";
   }
 
@@ -139,7 +135,6 @@ class Home extends Component {
         },
       })
       .then(async (response) => {
-        console.log("image array insta response", response.data.data);
         this.setState({
           mediaApiResponse: response.data.data,
         });
@@ -171,7 +166,6 @@ class Home extends Component {
           })
         );
         this.setState({ instaImages: finalImages });
-        console.log("this.state", this.state);
       }).catch(error => {
           console.log("first API error", mockData);
           this.setState({ instaImages: mockData.instaImages });
