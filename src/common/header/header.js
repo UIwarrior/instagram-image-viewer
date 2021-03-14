@@ -3,15 +3,12 @@ import './header.css';
 import Input from '@material-ui/core/Input';
 import InputAdornment from "@material-ui/core/InputAdornment";
 import SearchIcon from '@material-ui/icons/Search';
-import InputBase from '@material-ui/core/InputBase';
 import { withStyles } from "@material-ui/core/styles";
 import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 import profileImage from '../../assets/instaprofilepic.jpeg';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import { IconButton } from '@material-ui/core';
 
 const styles = (theme) => ({
     root: {

@@ -157,6 +157,7 @@ class Home extends Component {
                   comments: [],
                   id: imageDetails.id,
                   userName: imageDetails.username,
+                  captionTags: this.getCaptionTags(imageDetails.id),
                   likedFlag: false,
                 });
             }
@@ -178,7 +179,7 @@ class Home extends Component {
     const { classes } = this.props;
     return (
       <React.Fragment>
-        <Header logoName="Image Viewer" />
+        <Header logoName="Image Viewer" triggerSearch = {this.callSearch}/>
         <Grid item xs={12} className={classes.root} spacing={2}>
           <Grid container className = {classes.parentContainer} justify="center" spacing={4}>
             {this.state.instaImages &&

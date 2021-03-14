@@ -48,7 +48,6 @@ const styles = (theme) => ({
 });
 
 const HomeCard = (props) => {
-  console.log("props", props);
   const { classes } = props;
   return (
     <Card className={classes.root}>
