@@ -11,18 +11,22 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 
 const styles = (theme) => ({
   paper: {
-    marginTop: theme.spacing.unit * 8,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    padding: 20,
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: "100%",
     marginTop: theme.spacing.unit * 1,
   },
   submit: {
     margin: "20px 0px 0px 0px",
+    alignSelf: 'flex-start'
   },
+  title: {
+    alignSelf: 'flex-start'
+  }
 });
 
 class SignIn extends Component {
@@ -38,8 +42,6 @@ class SignIn extends Component {
         wrongpassword: false
       }
     };
-    console.log("this.props in form comp",credentials.accessToken);
-
     sessionStorage.setItem("access-token", credentials.accessToken);
   }
 
@@ -56,9 +58,6 @@ class SignIn extends Component {
   }
 
   submitLogin = () => {
-    console.log("credentials", credentials);
-    console.info("warning form is being submitted");  
-    console.log("state", this.state);
     if(credentials){
         const { username , password } = credentials;
         if(!this.state.username || !this.state.password) {
@@ -86,7 +85,6 @@ class SignIn extends Component {
             return;
         }
     }
-    console.log("login successful", this.props);
     this.props.history.push("/home");
   }
 
@@ -98,21 +96,21 @@ class SignIn extends Component {
       <div component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h5" className={classes.title}>
             LOGIN
           </Typography>
             <FormControl fullWidth required>
               <InputLabel htmlFor="component-simple">Username</InputLabel>
               <Input error ={this.state.error.wronguser} id="component-simple"  onChange = {this.updateUsername} />
-              {this.state.error.required && <FormHelperText id="component-error-text">Required</FormHelperText>}
+              {this.state.error.required && <FormHelperText id="component-error-text" error ={true}>Required</FormHelperText>}
 
             </FormControl>
             <FormControl fullWidth required>
               <InputLabel htmlFor="component-simple">Password</InputLabel>
               <Input type ="password" error ={this.state.error.wrongpassword} id="component-simple"  onChange = {this.updatePassword}  />
-              {this.state.error.required && <FormHelperText id="component-error-text">Required</FormHelperText>}
+              {this.state.error.required && <FormHelperText error ={true} id="component-error-text">Required</FormHelperText>}
 
-              {(this.state.error.wrongpassword || this.state.error.wronguser) && <FormHelperText id="component-error-text">Incorrect username and/or password</FormHelperText>}
+              {(this.state.error.wrongpassword || this.state.error.wronguser) && <FormHelperText error ={true} id="component-error-text">Incorrect username and/or password</FormHelperText>}
             </FormControl>
             <Button
               type="submit"

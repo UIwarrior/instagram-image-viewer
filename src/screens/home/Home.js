@@ -31,17 +31,17 @@ class Home extends Component {
     this.state = {
       instaImages: [],
       mediaApiResponse: [],
+      comment: 'test comment'
     };
     this.incrementLikes = this.incrementLikes.bind(this);
     this.addComment = this.addComment.bind(this);
     this.callSearch = this.callSearch.bind(this);
+    this.getComments = this.getComments.bind(this);
   }
 
 
   callSearch(e){
-    console.log("performing search", e.target.value);
     if(e.target.value === null || e.target.value === ""){
-        console.log(mockData);
         this.setState({
             instaImages:mockData.instaImages
           }); 
@@ -79,41 +79,52 @@ class Home extends Component {
   getTags(id) {
     const found = this.state.mediaApiResponse.find((val) => val.id === id);
     if (found) {
-      return found.caption.split("\n")[1];
+      return found.caption.substr(found.caption.lastIndexOf("\n"), found.caption.length) ;
     }
     return "";
   }
+
+  getComments(e){
+    this.setState({
+        comment:e
+    })
+  }
+
 
   convertDateTime(_date){
     const now = new Date(_date);
     const date = now.toLocaleDateString();
     const time = now.toLocaleTimeString();
-    console.log("date and time",date, time);
     return date + ' ' + time;
   }
 
-  addComment(id, commentObj, user){
-    console.log("adding", id);
+  addComment(id, user){
     let commentedImage = this.state.instaImages.find(val => val.id === id);
     commentedImage.comments.push({
-        comment: commentObj,
+        comment: this.state.comment,
         user,
     });
     this.setState(prevState => ({
-        instaImages: [...prevState.instaImages, commentedImage]
+        instaImages: [...prevState.instaImages, commentedImage],
       }));
+      document.getElementById("addCommentInput").val = "";
   }
 
   incrementLikes(params, id){
-    console.log("increment likes kicks in", id, this.state);
     let likedImage = this.state.instaImages.find(val => val.id === id);
+    likedImage.likedFlag = !likedImage.likedFlag;
+    if(likedImage.likedFlag === false){
+      likedImage.likes = likedImage.likes - 1;
+    }    
+   else{
     likedImage.likes = likedImage.likes + 1;
-    likedImage.likeColor = 'red';
-    
+   }
+
     this.setState(prevState => ({
         instaImages: [...prevState.instaImages, likedImage]
       }));
   }
+
   componentDidMount() {
     const finalImages = [];
     api
@@ -124,7 +135,6 @@ class Home extends Component {
         },
       })
       .then(async (response) => {
-        console.log("image array insta response", response.data.data);
         this.setState({
           mediaApiResponse: response.data.data,
         });
@@ -147,8 +157,8 @@ class Home extends Component {
                   comments: [],
                   id: imageDetails.id,
                   userName: imageDetails.username,
-                  likeColor: 'grey',
-                  captionTags: this.getCaptionTags(imageDetails.id)
+                  captionTags: this.getCaptionTags(imageDetails.id),
+                  likedFlag: false,
                 });
             }
             else{
@@ -157,7 +167,6 @@ class Home extends Component {
           })
         );
         this.setState({ instaImages: finalImages });
-        console.log("this.state", this.state);
       }).catch(error => {
           console.log("first API error", mockData);
           this.setState({ instaImages: mockData.instaImages });
@@ -185,7 +194,10 @@ class Home extends Component {
                   incrementLikes = {this.incrementLikes}
                   addComment = {this.addComment}
                   id={val.id}
-                  likeColor ={val.likeColor}
+                  likedFlag ={val.likedFlag}
+                  comments = {val.comments}
+                  getComments = {this.getComments}
+                  comment={this.state.comment}
                 />
               ))}
           </Grid>
