@@ -31,7 +31,7 @@ class Home extends Component {
     this.state = {
       instaImages: [],
       mediaApiResponse: [],
-      comment: ''
+      comment: 'test comment'
     };
     this.incrementLikes = this.incrementLikes.bind(this);
     this.addComment = this.addComment.bind(this);
@@ -79,7 +79,7 @@ class Home extends Component {
   getTags(id) {
     const found = this.state.mediaApiResponse.find((val) => val.id === id);
     if (found) {
-      return found.caption.split("\n")[1];
+      return found.caption.substr(found.caption.lastIndexOf("\n"), found.caption.length) ;
     }
     return "";
   }
@@ -108,21 +108,27 @@ class Home extends Component {
         user,
     });
     this.setState(prevState => ({
-        instaImages: [...prevState.instaImages, commentedImage]
+        instaImages: [...prevState.instaImages, commentedImage],
       }));
-      console.log("this.state after posting comment", this.state)
+      console.log("this.state", this.state);
+      document.getElementById("addCommentInput").val = "";
   }
 
   incrementLikes(params, id){
-    console.log("increment likes kicks in", id, this.state);
     let likedImage = this.state.instaImages.find(val => val.id === id);
+    likedImage.likedFlag = !likedImage.likedFlag;
+    if(likedImage.likedFlag === false){
+      likedImage.likes = likedImage.likes - 1;
+    }    
+   else{
     likedImage.likes = likedImage.likes + 1;
-    likedImage.likeColor = 'red';
-    
+   }
+
     this.setState(prevState => ({
         instaImages: [...prevState.instaImages, likedImage]
       }));
   }
+
   componentDidMount() {
     const finalImages = [];
     api
@@ -156,7 +162,7 @@ class Home extends Component {
                   comments: [],
                   id: imageDetails.id,
                   userName: imageDetails.username,
-                  likeColor: 'grey',
+                  likedFlag: false,
                 });
             }
             else{
@@ -193,9 +199,10 @@ class Home extends Component {
                   incrementLikes = {this.incrementLikes}
                   addComment = {this.addComment}
                   id={val.id}
-                  likeColor ={val.likeColor}
+                  likedFlag ={val.likedFlag}
                   comments = {val.comments}
                   getComments = {this.getComments}
+                  comment={this.state.comment}
                 />
               ))}
           </Grid>
