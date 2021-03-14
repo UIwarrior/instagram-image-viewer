@@ -87,7 +87,7 @@ const HomeCard = (props) => {
       </CardActions>
       <Typography variant="body2" color="textPrimary" component="p">
           {props.comments && props.comments.map(val => (
-            <span>{val.user}: {val.comment}</span>
+            <Typography variant="subtitle1">{val.user}: {val.comment}</Typography>
           ))}
         </Typography>
     </Card>
