@@ -11,14 +11,19 @@ import profileImage from '../../assets/instaprofilepic.jpeg';
 import EditIcon from '@material-ui/icons/Edit';
 import Fab from '@material-ui/core/Fab';
 import ModalComponent from "../../common/modal/modal";
+import ImageModalBody from "../../common/modal-image";
 
 const styles = (theme) => ({
   root: {
     flexGrow: 1,
+    width: '60%',
+    margin: '20px auto',
+    justifyContent: 'center',
   },
-  profile:{
-      width: '70%',
-      margin: 'auto'
+  avatar:{
+    width: 90,
+    height:90,
+    margin:'10px 10px 10px 10px'
   },
   parentContainer: { 
     width: '60%',
@@ -28,9 +33,21 @@ const styles = (theme) => ({
     height: 140,
     width: 100,
   },
+  profileImage:{
+    marginRight: 40
+  },
+  userNameSection:{
+    marginBottom: 10
+  },
+  followersSection:{
+    marginBottom: 15
+  },
   control: {
     padding: theme.spacing.unit * 2,
   },
+  updateButton:{
+    marginTop: 30
+  }
 });
 
 class Profile extends Component {
@@ -40,8 +57,8 @@ class Profile extends Component {
       instaImages: [],
       mediaApiResponse: [],
       comment: '',
-      followers: 0,
-      noOfPeopleFollowed: 0,
+      followers: 396,
+      noOfPeopleFollowed: 566,
       fullName: "Arnab Sadhya",
       changedName: '',
       imageModalFlag: false,
@@ -149,10 +166,21 @@ class Profile extends Component {
     this.setState({editModalFlag: false});
   };
 
+  handleImageModalClose = () => {
+    this.setState({imageModalFlag: false});
+  }
+
  updateFullName(){
-   this.setState({
-     fullName:this.state.changedName
-   })
+   if(this.state.changedName !== '' && this.state.changedName !== null && this.state.changedName !== undefined){
+    this.setState({
+      fullName:this.state.changedName,
+      editModalFlag: false
+    })
+   } 
+   else{
+     return;
+   }
+
  }
 
  changeNameHandler(e){
@@ -162,6 +190,7 @@ class Profile extends Component {
  }
 
  openImageModal(imageObj){
+   console.log("image obj", imageObj);
   this.setState({
     imageModalFlag: true,
     clickedImageObj: imageObj
@@ -224,16 +253,16 @@ class Profile extends Component {
     return (
       <React.Fragment>
         <Header logoName="Image Viewer" />  
-        <ModalComponent modalTitle="Edit" open ={this.state.editModalFlag} handleClose = {this.handleClose}>
-             <TextField id="standard-basic" label="Full Name" onChange ={this.changeNameHandler}/>
-            <Button variant="contained" color="primary" onClick = {this.updateFullName}>
+        <ModalComponent modalTitle="Edit" open ={this.state.editModalFlag} handleClose = {this.handleClose} size="sm">
+            <TextField id="standard-basic" label="Full Name" required onChange ={this.changeNameHandler}/>
+            <Button variant="contained" color="primary" onClick = {this.updateFullName} className={classes.updateButton}>
             UPDATE
           </Button>
           </ModalComponent>  
 
 
-          <ModalComponent modalTitle="Edit" open ={this.state.imageModalFlag} handleClose = {this.handleClose}>
-           <HomeCard
+          <ModalComponent open ={this.state.imageModalFlag} handleClose = {this.handleImageModalClose} size="lg">
+           <ImageModalBody
                   media_url={this.state.clickedImageObj.media_url}
                   caption={this.state.clickedImageObj.caption}
                   tags={this.state.clickedImageObj.tags}
@@ -250,19 +279,42 @@ class Profile extends Component {
           </ModalComponent>  
 
 
-
-        <Grid item xs={12} className={classes.root} spacing={2}>
-        <Grid className={classes.profile}>
-        <Avatar src={profileImage} />
-        <Typography>{this.state.instaImages[0] && this.state.instaImages[0].userName}</Typography>
-        <Typography>Posts:{this.state.instaImages[0] && this.state.instaImages.length}</Typography>
-        <Typography>Follows:{this.state.instaImages[0] && this.state.noOfPeopleFollowed}</Typography>
-        <Typography>Followed By:{this.state.instaImages[0] && this.state.followers}</Typography>
-        <Typography>{this.state.instaImages[0] && this.state.fullName} <Fab color="secondary" aria-label="edit">
-        <EditIcon onClick = {this.handleOpen}/>
-      </Fab></Typography>
-        
+        <Grid container className={classes.root} spacing={4}>
+        <Grid item xs={1} className={classes.profileImage}>
+        <Avatar src={profileImage} className={classes.avatar}/>
         </Grid>
+        <Grid item xs = {8}>
+
+        <Grid item xs = {12} className ={classes.userNameSection}>
+        <Typography variant="h5">{this.state.instaImages[0] && this.state.instaImages[0].userName}</Typography>
+        </Grid>
+
+        <Grid item xs = {12} className ={classes.followersSection}>
+        <Grid container>
+        <Grid item xs={2} >
+        <Typography>Posts: {this.state.instaImages[0] && this.state.instaImages.length}</Typography>
+        </Grid>
+        <Grid item xs={2} >
+        <Typography>Follows: {this.state.instaImages[0] && this.state.noOfPeopleFollowed}</Typography>
+
+        </Grid>
+        <Grid item xs={2} >
+        <Typography>Followed By: {this.state.instaImages[0] && this.state.followers}</Typography>
+
+        </Grid>
+        </Grid>
+
+        </Grid>
+        <Grid item xs ={12}>
+        <Typography>{this.state.instaImages[0] && this.state.fullName} <Fab size="small" onClick = {this.handleOpen} color="secondary" aria-label="edit">
+        <EditIcon />
+         </Fab>
+       </Typography>
+        </Grid>
+        </Grid>
+
+        </Grid>
+        
           <Grid container className = {classes.parentContainer} justify="center" spacing={4}>
           <GridList cellHeight={240} className={classes.gridList} cols={3}>
             {this.state.instaImages &&
@@ -273,7 +325,6 @@ class Profile extends Component {
               ))}
               </GridList>
           </Grid>
-        </Grid>
       </React.Fragment>
     );
   }

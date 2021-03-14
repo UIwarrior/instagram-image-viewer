@@ -5,11 +5,10 @@ import { withStyles } from "@material-ui/core/styles";
 const styles = (theme) => ({
   paper: {
     position: 'absolute',
-    width: 400,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
-    padding: '16px 32px 24px',
+    padding: 5,
   },
 });
 
@@ -36,6 +35,9 @@ class ModalComponent extends React.Component {
       top: `${top}%`,
       left: `${left}%`,
       transform: `translate(-${top}%, -${left}%)`,
+      width: this.props.size  === 'lg' ? 650: 200,
+      height: this.props.size  === 'lg' ? 350: 200,
+      padding: 20
     };
   }
 
@@ -48,7 +50,8 @@ class ModalComponent extends React.Component {
         aria-describedby="simple-modal-description"
        >
             <div style={this.state.modalStyle} className={this.props.classes.paper}>
-  
+            {this.props.modalTitle && <h2>{this.props.modalTitle}</h2>}
+
         {this.props.children}
         </div>
       </Modal>
