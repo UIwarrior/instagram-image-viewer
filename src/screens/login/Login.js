@@ -10,6 +10,10 @@ const styles = {
   root: {
     minWidth: 275,
   },
+  loginContainer: {
+    margin: 'auto',
+    width: 500
+  }
 };
 class Login extends React.Component {
   constructor(props) {
@@ -17,7 +21,6 @@ class Login extends React.Component {
     this.state = {
       login: {},
     };
-    console.log(this.props, "props.login");
   }
 
   render() {
@@ -26,7 +29,7 @@ class Login extends React.Component {
     return (
       <div>
         <Header logoName="Image Viewer" />
-        <div className="loginContainer">
+        <div className={classes.loginContainer}>
           <Card className={classes.root}>
             <CardContent>
               <SignIn history={history} />
