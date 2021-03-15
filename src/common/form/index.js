@@ -6,7 +6,7 @@ import { withStyles } from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
-import { credentials } from '../../credentials';
+import { credentials } from '../../screens/login/Login';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
 const styles = (theme) => ({
@@ -42,7 +42,6 @@ class SignIn extends Component {
         wrongpassword: false
       }
     };
-    sessionStorage.setItem("access-token", credentials.accessToken);
   }
 
   updateUsername = (e) => {

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
 import Header from "../../common/header/header";
-import { credentials } from "../../credentials";
+import { credentials } from '../../screens/login/Login';
 import api from "../../utils/api";
 import mockData from '../../mock-data.json';
 import { Avatar, Button, GridList, GridListTile,TextField, Typography } from "@material-ui/core";
@@ -198,7 +198,7 @@ class Profile extends Component {
 
   componentDidMount() {
 
-    if( sessionStorage.getItem('loggedIn') !== "true")
+    if( sessionStorage.getItem('loggedIn') !== "true" && !sessionStorage.getItem("access-token"))
     {
       this.props.history.push("/login");
     }
