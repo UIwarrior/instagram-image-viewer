@@ -40,6 +40,13 @@ class Home extends Component {
     this.getComments = this.getComments.bind(this);
   }
 
+  /**
+   * Method which invokes when user searches anything in top search bar, 
+   * it searces in entire array within caption and return matched results
+   * @param {*} e 
+   */
+
+
   callSearch(e){
     if(e.target.value === null || e.target.value === ""){
         this.setState({
@@ -55,13 +62,26 @@ class Home extends Component {
     
   }
 
+/**
+ * This method returns caption and tags both for a specific image from API response
+ * @param {*} id 
+ * @returns 
+ */
+
+
   getCaptionTags(id){
     const matchedCaption = this.state.mediaApiResponse.find((val) => val.id === id);
     if (matchedCaption) {
       return matchedCaption.caption;
     }
-
   }
+
+/**
+ * This method returns caption for a specific image using id from API response
+ * @param {*} id 
+ * @returns 
+ */
+
 
   getCaption(id) {
     const matchedCaption = this.state.mediaApiResponse.find((val) => val.id === id);
@@ -72,9 +92,21 @@ class Home extends Component {
     return "";
   }
 
+ /**
+ * This method generates and return random likes count
+ * @returns 
+ */
+
+
   getLikes() {
     return Math.floor(Math.random() * 1000)
   }
+
+/**
+ * This method returns tags for a specific image using id from API response
+ * @param {*} id 
+ * @returns 
+ */
 
   getTags(id) {
     const found = this.state.mediaApiResponse.find((val) => val.id === id);
@@ -83,6 +115,13 @@ class Home extends Component {
     }
     return "";
   }
+
+  /**
+   * This method acts as a handler for comment box within each image when User types a comment 
+   * @param {*} e 
+   * @param {*} id 
+   */
+
 
   getComments(e, id){
     let commentedImage = this.state.instaImages.find(val => val.id === id);
@@ -93,6 +132,12 @@ class Home extends Component {
         }));
   }
 
+  /**
+   * This method converts API response datetime to date and time 
+   * @param {*} _date 
+   * @returns 
+   */
+
 
   convertDateTime(_date){
     const now = new Date(_date);
@@ -100,6 +145,13 @@ class Home extends Component {
     const time = now.toLocaleTimeString();
     return date + ' ' + time;
   }
+
+  /**
+   * This method adds a comment a specific image by an user 
+   * @param {*} id 
+   * @param {*} user 
+   */
+
 
   addComment(id, user){
     let commentedImage = this.state.instaImages.find(val => val.id === id);
@@ -113,6 +165,13 @@ class Home extends Component {
         instaImages: [...prevState.instaImages, commentedImage],
       }));
   }
+
+  /**
+   * This method increments likes or decrements on a specific image
+   * @param {*} params 
+   * @param {*} id 
+   */
+
 
   incrementLikes(params, id){
     let likedImage = this.state.instaImages.find(val => val.id === id);
@@ -131,6 +190,7 @@ class Home extends Component {
 
   componentDidMount() {
 
+    // check to validate if user is logged in
     if( sessionStorage.getItem('loggedIn') !== "true" && !sessionStorage.getItem("access-token"))
     {
       this.props.history.push("/login");

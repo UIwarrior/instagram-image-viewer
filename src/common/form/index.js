@@ -44,17 +44,32 @@ class SignIn extends Component {
     };
   }
 
+  /**
+   * This method updates user name state variable, 
+   * @param {*} e  - event 
+   */
+
   updateUsername = (e) => {
     this.setState({
         username: e.target.value
     })
   }
  
+  /**
+   *  This method updates password state variable, 
+   * @param {*} e 
+   */
+
   updatePassword = (e) => {
     this.setState({
         password: e.target.value
     })
   }
+
+  /**
+   * This method gets invoked when we click on login button, this also validates for empty username, password and matches with credential object for correct user name/password combo
+   * @returns 
+   */
 
   submitLogin = () => {
     if(credentials){

@@ -10,7 +10,6 @@ import profileImage from '../../assets/instaprofilepic.jpeg';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { Divider } from '@material-ui/core';
-import { Link } from 'react-router-dom';
 
 const styles = (theme) => ({
     root: {
@@ -50,11 +49,23 @@ class Header extends React.Component{
      }
    }
 
+   /**
+    * This method opens the profile menu when clicked on profile picture
+    * @param {*} e 
+    */
+
    handleClick = (e) => {
      this.setState({
        anchorEl:e.currentTarget
      })
    }
+
+
+   /**
+    * This method closes the profile menu, also when clicked on logout takes user to login page again, if clicked on profiles
+    * it checks if user is already logged in or not then redirects to profile
+    * @param {*} e 
+    */
 
    handleClose = (param) => {
     this.setState({
@@ -65,7 +76,7 @@ class Header extends React.Component{
       sessionStorage.clear();
     }
     else if( param === 'profile' ){
-      if(sessionStorage.getItem('loggedIn') === "true"){
+      if(sessionStorage.getItem('loggedIn') === "true" && sessionStorage.getItem('access-token')){
         this.props.history.push("/profile");
       }
       else{

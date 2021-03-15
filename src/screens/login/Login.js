@@ -3,9 +3,9 @@ import Header from "../../common/header/header";
 import Card from "@material-ui/core/Card";
 import CardContent from '@material-ui/core/CardContent';
 import { withStyles } from "@material-ui/core/styles";
-// import "./index.css";
 import SignIn from "../../common/form/index";
 
+//hardcoded credentials
 export const credentials  = {
   username: "arnabsadhya",
   password: "sadhyatemp",
@@ -21,7 +21,7 @@ const styles = {
     width: 500
   }
 };
-class Login extends React.Component {
+class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {

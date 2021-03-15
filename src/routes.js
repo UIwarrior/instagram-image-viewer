@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router, Redirect, Route, Switch } from 'react-router-dom';
+import { Router, Route, Switch } from 'react-router-dom';
 import history from './history';
 import Home from './screens/home/Home';
 import Login from './screens/login/Login';
