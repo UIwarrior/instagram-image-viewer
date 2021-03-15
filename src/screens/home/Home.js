@@ -111,7 +111,6 @@ class Home extends Component {
     this.setState(prevState => ({
         instaImages: [...prevState.instaImages, commentedImage],
       }));
-     console.log("thois.state", this.state);
   }
 
   incrementLikes(params, id){
@@ -172,7 +171,6 @@ class Home extends Component {
           })
         );
         this.setState({ instaImages: finalImages });
-        console.log("state", this.state);
       }).catch(error => {
           console.log("first API error", mockData);
           this.setState({ instaImages: mockData.instaImages });
