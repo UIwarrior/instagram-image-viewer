@@ -9,6 +9,8 @@ import Grid from '@material-ui/core/Grid';
 import profileImage from '../../assets/instaprofilepic.jpeg';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import { Divider } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 const styles = (theme) => ({
     root: {
@@ -22,6 +24,21 @@ const styles = (theme) => ({
         display: 'block',
       },
     },
+    searchBox:{
+      backgroundColor: '#c0c0c0',
+      borderRadius: 4
+    },
+    inputBox: {
+      width:300,
+    },
+    avatar:{
+      "& div":{
+        marginLeft: 30
+      }
+    },
+    profileMenu: {
+      cursor: 'pointer'
+    }
   });
 
 class Header extends React.Component{
@@ -39,40 +56,68 @@ class Header extends React.Component{
      })
    }
 
-   handleClose = () => {
+   handleClose = (param) => {
     this.setState({
       anchorEl: null
     })
+    if(param === 'logout'){
+      this.props.history.push("/login");
+      sessionStorage.clear();
+    }
+    else if( param === 'profile' ){
+      if(sessionStorage.getItem('loggedIn') === "true"){
+        this.props.history.push("/profile");
+      }
+      else{
+        alert("Please login first");
+      }
+
+    }
    }
     render() {
       const { anchorEl } = this.state;
-      const { logoName , triggerSearch} = this.props;
+      const { logoName , triggerSearch, classes} = this.props;
       return (
           <div className ="header">
-    
-          <Grid container spacing={1} alignItems="flex-end">
-          <Grid item xs={10}><span className="logo">{logoName}</span></Grid>
-          <Grid item xs={1}>
+          <Grid container spacing={3} alignItems="flex-end">
+          <Grid item xs={9}><span className="logo">{logoName}</span></Grid>
+          <Grid item xs={2}  className ={ classes.searchBox}>
           <Input
+            className ={classes.inputBox}
             onChange = {triggerSearch}
+            disableUnderline={true}             
             id="input-with-icon-adornment"
             startAdornment={
               <InputAdornment position="start" >
                 <SearchIcon />
               </InputAdornment>
             }
-          /></Grid>
-            <Grid item xs={1}><Avatar src={profileImage} alt="arnab" onClick={this.handleClick}  />
+          />
+          
+          </Grid>
+            <Grid item xs={1} className ={classes.avatar}>
+            <Avatar src={profileImage} alt="arnab" onClick={this.handleClick} style={{ height: '30px', width: '30px' }} />
             <Menu
-          id="simple-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={this.handleClose}
-        >
-          <MenuItem onClick={this.handleClose}>My account</MenuItem>
-          <MenuItem onClick={this.handleClose}>Logout</MenuItem>
-        </Menu>
+              id="simple-menu"
+              className = {classes.profileMenu}
+              elevation={0}
+            getContentAnchorEl={null}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={this.handleClose}>
+              <MenuItem onClick={() => this.handleClose('profile')}>My account</MenuItem>
+              <Divider />
+              <MenuItem onClick={() => this.handleClose('logout')}>Logout</MenuItem>
+            </Menu>
             </Grid>
           </Grid>
           </div>

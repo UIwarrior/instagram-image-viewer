@@ -25,10 +25,10 @@ class Login extends React.Component {
 
   render() {
     const { classes, history } = this.props;
-
+    console.log("this.props", this.props);
     return (
       <div>
-        <Header logoName="Image Viewer" />
+        <Header logoName="Image Viewer"  history={history}/>
         <div className={classes.loginContainer}>
           <Card className={classes.root}>
             <CardContent>

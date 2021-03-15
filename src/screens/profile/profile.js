@@ -28,10 +28,6 @@ const styles = (theme) => ({
     width: '60%',
     margin: 'auto',
   },
-  paper: {
-    height: 140,
-    width: 100,
-  },
   profileImage:{
     marginRight: 40
   },
@@ -201,57 +197,65 @@ class Profile extends Component {
  
 
   componentDidMount() {
-    const finalImages = [];
-    api
-      .get("/me/media", {
-        params: {
-          fields: "id,caption",
-          access_token: credentials.accessToken,
-        },
-      })
-      .then(async (response) => {
-        this.setState({
-          mediaApiResponse: response.data.data,
-        });
-        await Promise.all(
-          response.data.data.map(async (val) => {
-            const _response = await api.get(`/${val.id}`, {
-              params: {
-                fields: "id,media_type,media_url,username,timestamp",
-                access_token: credentials.accessToken,
-              },
-            });
-            if(_response){
-                const imageDetails = await _response.data;
-                finalImages.push({
-                  media_url: imageDetails.media_url,
-                  date: this.convertDateTime(imageDetails.timestamp),
-                  caption: this.getCaption(imageDetails.id),
-                  tags: this.getTags(imageDetails.id),
-                  likes: this.getLikes(),
-                  comments: [],
-                  id: imageDetails.id,
-                  userName: imageDetails.username,
-                  likeColor: 'grey',
-                });
-            }
-            else{
-                console.log("second API error happened");
-            }
-          })
-        );
-        this.setState({ instaImages: finalImages });
-      }).catch(error => {
-          console.log("first API error", mockData);
-          this.setState({ instaImages: mockData.instaImages });
-      })
-  };
+
+    if( sessionStorage.getItem('loggedIn') !== "true")
+    {
+      this.props.history.push("/login");
+    }
+    else{
+      const finalImages = [];
+      api
+        .get("/me/media", {
+          params: {
+            fields: "id,caption",
+            access_token: credentials.accessToken,
+          },
+        })
+        .then(async (response) => {
+          this.setState({
+            mediaApiResponse: response.data.data,
+          });
+          await Promise.all(
+            response.data.data.map(async (val) => {
+              const _response = await api.get(`/${val.id}`, {
+                params: {
+                  fields: "id,media_type,media_url,username,timestamp",
+                  access_token: credentials.accessToken,
+                },
+              });
+              if(_response){
+                  const imageDetails = await _response.data;
+                  finalImages.push({
+                    media_url: imageDetails.media_url,
+                    date: this.convertDateTime(imageDetails.timestamp),
+                    caption: this.getCaption(imageDetails.id),
+                    tags: this.getTags(imageDetails.id),
+                    likes: this.getLikes(),
+                    comments: [],
+                    id: imageDetails.id,
+                    userName: imageDetails.username,
+                    likeColor: 'grey',
+                  });
+              }
+              else{
+                  console.log("second API error happened");
+              }
+            })
+          );
+          this.setState({ instaImages: finalImages });
+        }).catch(error => {
+            console.log("first API error", mockData);
+            this.setState({ instaImages: mockData.instaImages });
+        })
+    }
+  }
+
 
   render() {
-    const { classes } = this.props;
+    const { classes, history } = this.props;
     return (
       <React.Fragment>
-        <Header logoName="Image Viewer" />  
+        <Header logoName="Image Viewer" history={history} />  
         <ModalComponent modalTitle="Edit" open ={this.state.editModalFlag} handleClose = {this.handleClose} size="sm">
             <TextField id="standard-basic" label="Full Name" required onChange ={this.changeNameHandler}/>
             <Button variant="contained" color="primary" onClick = {this.updateFullName} className={classes.updateButton}>
@@ -319,9 +323,9 @@ class Profile extends Component {
           <GridList cellHeight={240} className={classes.gridList} cols={3}>
             {this.state.instaImages &&
               this.state.instaImages.map((val) => (
-                <GridListTile key={val.media_url} cols={val.cols || 1}>
+                <GridListTile style={{cursor: 'pointer'}} key={val.media_url} cols={val.cols || 1}>
                         <img onClick={() =>this.openImageModal(val)} src={val.media_url} alt={val.caption} />
-              </GridListTile>
+                </GridListTile>
               ))}
               </GridList>
           </Grid>

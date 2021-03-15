@@ -4,8 +4,8 @@ import './index.css';
 import AppRoutes from './routes';
 
 ReactDOM.render(
-    <span>
+    <div>
         <AppRoutes/>
-    </span>, 
+    </div>, 
     document.getElementById('root')
 );
