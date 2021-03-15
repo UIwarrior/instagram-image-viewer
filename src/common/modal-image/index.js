@@ -64,18 +64,19 @@ const ImageModalBody = (props) => {
          <Grid item xs ={12}  className = {classes.comments}>
          <Typography variant="body2" color="textPrimary" component="p">
           {props.comments && props.comments.map(val => (
-            <span>{val.user}: {val.comment}</span>
+            <Typography variant="subtitle1">{val.user}: {val.comment}</Typography>
           ))}
         </Typography>
          </Grid>
          <Grid item xs ={12}  className = {classes.likes}>
          <IconButton className = {classes.favIcon} aria-label="add to favorites" onClick={() => props.incrementLikes(props.likes, props.id)}>
-          <FavoriteBorderIcon />
+          {!props.likedFlag && <FavoriteBorderIcon/>}
+          {props.likedFlag && <FavoriteIcon color="secondary"/>}
         </IconButton>
         <span>{props.likes} likes</span>
          </Grid>
          <Grid item xs ={12}  className = {classes.addComment}>
-           <TextField id="standard-basic" label="Add a comment" onChange={(e) =>props.getComments(e.target.value)}/>
+           <TextField value ={props.commentInputVal} id="standard-basic" label="Add a comment" onChange={(e) =>props.getComments(e.target.value)}/>
            <Button variant="contained" color="primary" onClick ={() => props.addComment(props.id, props.userName)}>Add</Button>
          </Grid>
         </Grid>

@@ -35,8 +35,8 @@ class ModalComponent extends React.Component {
       top: `${top}%`,
       left: `${left}%`,
       transform: `translate(-${top}%, -${left}%)`,
-      width: this.props.size  === 'lg' ? 650: 200,
-      height: this.props.size  === 'lg' ? 350: 200,
+      width: this.props.size  === 'lg' ? 700: 200,
+      height: this.props.size  === 'lg' ? 'auto': 200,
       padding: 20
     };
   }

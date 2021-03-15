@@ -31,7 +31,7 @@ class Home extends Component {
     this.state = {
       instaImages: [],
       mediaApiResponse: [],
-      comment: 'test comment'
+      commentInputValue: ""
     };
     this.incrementLikes = this.incrementLikes.bind(this);
     this.addComment = this.addComment.bind(this);
@@ -83,10 +83,13 @@ class Home extends Component {
     return "";
   }
 
-  getComments(e){
-    this.setState({
-        comment:e
-    })
+  getComments(e, id){
+    let commentedImage = this.state.instaImages.find(val => val.id === id);
+    commentedImage.commentInputValue = e;
+        this.setState(prevState => ({
+          instaImages: [...prevState.instaImages, commentedImage],
+          commentInputValue: e
+        }));
   }
 
 
@@ -100,13 +103,15 @@ class Home extends Component {
   addComment(id, user){
     let commentedImage = this.state.instaImages.find(val => val.id === id);
     commentedImage.comments.push({
-        comment: this.state.comment,
+        comment: this.state.commentInputValue,
         user,
     });
+
+    commentedImage.commentInputValue = "";
     this.setState(prevState => ({
         instaImages: [...prevState.instaImages, commentedImage],
       }));
-      document.getElementById("addCommentInput").val = "";
+     console.log("thois.state", this.state);
   }
 
   incrementLikes(params, id){
@@ -158,6 +163,7 @@ class Home extends Component {
                   userName: imageDetails.username,
                   captionTags: this.getCaptionTags(imageDetails.id),
                   likedFlag: false,
+                  commentInputValue: this.state.commentInputValue
                 });
             }
             else{
@@ -166,6 +172,7 @@ class Home extends Component {
           })
         );
         this.setState({ instaImages: finalImages });
+        console.log("state", this.state);
       }).catch(error => {
           console.log("first API error", mockData);
           this.setState({ instaImages: mockData.instaImages });
@@ -196,7 +203,7 @@ class Home extends Component {
                   likedFlag ={val.likedFlag}
                   comments = {val.comments}
                   getComments = {this.getComments}
-                  comment={this.state.comment}
+                  commentInputValue ={val.commentInputValue}
                 />
               ))}
           </Grid>

@@ -63,7 +63,8 @@ class Profile extends Component {
       changedName: '',
       imageModalFlag: false,
       editModalFlag: false,
-      clickedImageObj: {}
+      clickedImageObj: {},
+      commentInputVal: '',
     };
     this.incrementLikes = this.incrementLikes.bind(this);
     this.addComment = this.addComment.bind(this);
@@ -121,7 +122,8 @@ class Profile extends Component {
   getComments(e){
     console.log("comments",e);
     this.setState({
-        comment:e
+        comment:e,
+        commentInputVal: e
     })
   }
 
@@ -138,21 +140,26 @@ class Profile extends Component {
     console.log("adding", id);
     let commentedImage = this.state.instaImages.find(val => val.id === id);
     commentedImage.comments.push({
-        comment: this.state.comment,
+        comment: this.state.commentInputVal,
         user,
     });
     this.setState(prevState => ({
+        commentInputVal: '',
         instaImages: [...prevState.instaImages, commentedImage]
       }));
       console.log("this.state after posting comment", this.state)
   }
 
   incrementLikes(params, id){
-    console.log("increment likes kicks in", id, this.state);
     let likedImage = this.state.instaImages.find(val => val.id === id);
+    likedImage.likedFlag = !likedImage.likedFlag;
+    if(likedImage.likedFlag === false){
+      likedImage.likes = likedImage.likes - 1;
+    }    
+   else{
     likedImage.likes = likedImage.likes + 1;
-    likedImage.likeColor = 'red';
-    
+   }
+
     this.setState(prevState => ({
         instaImages: [...prevState.instaImages, likedImage]
       }));
@@ -190,7 +197,6 @@ class Profile extends Component {
  }
 
  openImageModal(imageObj){
-   console.log("image obj", imageObj);
   this.setState({
     imageModalFlag: true,
     clickedImageObj: imageObj
@@ -272,9 +278,10 @@ class Profile extends Component {
                   incrementLikes = {this.incrementLikes}
                   addComment = {this.addComment}
                   id={this.state.clickedImageObj.id}
-                  likeColor ={this.state.clickedImageObj.likeColor}
+                  likedFlag ={this.state.clickedImageObj.likedFlag}
                   comments = {this.state.clickedImageObj.comments}
                   getComments = {this.getComments}
+                  commentInputVal = {this.state.commentInputVal}
                 />
           </ModalComponent>  
 
