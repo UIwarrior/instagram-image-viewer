@@ -3,7 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
 import HomeCard from "../../common/card/index";
 import Header from "../../common/header/header";
-import { credentials } from "../../credentials";
+import { credentials } from '../../screens/login/Login';
 import api from "../../utils/api";
 import mockData from '../../mock-data.json';
 import "./Home.css";
@@ -27,6 +27,7 @@ const styles = (theme) => ({
 
 class Home extends Component {
   constructor(props) {
+    console.log("home props", props);
     super(props);
     this.state = {
       instaImages: [],
@@ -129,61 +130,71 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    const finalImages = [];
-    api
-      .get("/me/media", {
-        params: {
-          fields: "id,caption",
-          access_token: credentials.accessToken,
-        },
-      })
-      .then(async (response) => {
-        this.setState({
-          mediaApiResponse: response.data.data,
-        });
-        await Promise.all(
-          response.data.data.map(async (val) => {
-            const _response = await api.get(`/${val.id}`, {
-              params: {
-                fields: "id,media_type,media_url,username,timestamp",
-                access_token: credentials.accessToken,
-              },
-            });
-            if(_response){
-                const imageDetails = await _response.data;
-                finalImages.push({
-                  media_url: imageDetails.media_url,
-                  date: this.convertDateTime(imageDetails.timestamp),
-                  caption: this.getCaption(imageDetails.id),
-                  tags: this.getTags(imageDetails.id),
-                  likes: this.getLikes(),
-                  comments: [],
-                  id: imageDetails.id,
-                  userName: imageDetails.username,
-                  captionTags: this.getCaptionTags(imageDetails.id),
-                  likedFlag: false,
-                  commentInputValue: this.state.commentInputValue
-                });
-            }
-            else{
-                console.log("second API error happened");
-            }
-          })
-        );
-        this.setState({ instaImages: finalImages });
-      }).catch(error => {
-          console.log("first API error", mockData);
-          this.setState({ instaImages: mockData.instaImages });
-      })
+
+    if( sessionStorage.getItem('loggedIn') !== "true" && !sessionStorage.getItem("access-token"))
+    {
+      this.props.history.push("/login");
+    }
+    else
+    {
+      const finalImages = [];
+      api
+        .get("/me/media", {
+          params: {
+            fields: "id,caption",
+            access_token: credentials.accessToken,
+          },
+        })
+        .then(async (response) => {
+          this.setState({
+            mediaApiResponse: response.data.data,
+          });
+          await Promise.all(
+            response.data.data.map(async (val) => {
+              const _response = await api.get(`/${val.id}`, {
+                params: {
+                  fields: "id,media_type,media_url,username,timestamp",
+                  access_token: credentials.accessToken,
+                },
+              });
+              if(_response){
+                  const imageDetails = await _response.data;
+                  finalImages.push({
+                    media_url: imageDetails.media_url,
+                    date: this.convertDateTime(imageDetails.timestamp),
+                    caption: this.getCaption(imageDetails.id),
+                    tags: this.getTags(imageDetails.id),
+                    likes: this.getLikes(),
+                    comments: [],
+                    id: imageDetails.id,
+                    userName: imageDetails.username,
+                    captionTags: this.getCaptionTags(imageDetails.id),
+                    likedFlag: false,
+                    commentInputValue: this.state.commentInputValue
+                  });
+              }
+              else{
+                  console.log("second API error happened");
+              }
+            })
+          );
+          this.setState({ instaImages: finalImages });
+        }).catch(error => {
+            console.log("first API error due to token expiry, will load from mock data", mockData);
+            this.setState({ instaImages: mockData.instaImages });
+        })
+    }
+
   }
 
 
 
   render() {
-    const { classes } = this.props;
+    const { classes, history } = this.props;
+    console.log("this.props", this.props);
     return (
       <React.Fragment>
-        <Header logoName="Image Viewer" triggerSearch = {this.callSearch}/>
+        <Header logoName="Image Viewer" triggerSearch = {this.callSearch} history={history}/>
         <Grid item xs={12} className={classes.root} spacing={2}>
           <Grid container className = {classes.parentContainer} justify="center" spacing={4}>
             {this.state.instaImages &&

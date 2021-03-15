@@ -18,6 +18,7 @@ const styles = (theme) => ({
   root: {
     minWidth: 350,
     maxWidth: 350,
+    height: 'auto',
     margin: '20px',
     padding:10
   },
