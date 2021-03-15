@@ -12,7 +12,7 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { withStyles } from '@material-ui/core/styles';
 import profileImage from '../../assets/instaprofilepic.jpeg';
-import { Button, Grid, TextField } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 
 const styles = (theme) => ({
   root: {

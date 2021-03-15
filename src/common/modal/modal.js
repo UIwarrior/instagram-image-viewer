@@ -11,13 +11,10 @@ const styles = (theme) => ({
     padding: 5,
   },
 });
-
-
 class ModalComponent extends React.Component {
 
   constructor(props){
     super(props);
-    console.log("props", props);
     this.state = {
       modalStyle: this.getModalStyle()
     }

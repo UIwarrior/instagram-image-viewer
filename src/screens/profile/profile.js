@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
-import HomeCard from "../../common/card/index";
 import Header from "../../common/header/header";
 import { credentials } from "../../credentials";
 import api from "../../utils/api";
 import mockData from '../../mock-data.json';
-import { Avatar, Button, GridList, GridListTile, Modal, TextField, Typography } from "@material-ui/core";
+import { Avatar, Button, GridList, GridListTile,TextField, Typography } from "@material-ui/core";
 import profileImage from '../../assets/instaprofilepic.jpeg';
 import EditIcon from '@material-ui/icons/Edit';
 import Fab from '@material-ui/core/Fab';
@@ -120,7 +119,6 @@ class Profile extends Component {
   }
 
   getComments(e){
-    console.log("comments",e);
     this.setState({
         comment:e,
         commentInputVal: e
@@ -132,12 +130,10 @@ class Profile extends Component {
     const now = new Date(_date);
     const date = now.toLocaleDateString();
     const time = now.toLocaleTimeString();
-    console.log("date and time",date, time);
     return date + ' ' + time;
   }
 
   addComment(id, user){
-    console.log("adding", id);
     let commentedImage = this.state.instaImages.find(val => val.id === id);
     commentedImage.comments.push({
         comment: this.state.commentInputVal,
@@ -147,7 +143,6 @@ class Profile extends Component {
         commentInputVal: '',
         instaImages: [...prevState.instaImages, commentedImage]
       }));
-      console.log("this.state after posting comment", this.state)
   }
 
   incrementLikes(params, id){
@@ -215,7 +210,6 @@ class Profile extends Component {
         },
       })
       .then(async (response) => {
-        console.log("image array insta response", response.data.data);
         this.setState({
           mediaApiResponse: response.data.data,
         });
@@ -247,7 +241,6 @@ class Profile extends Component {
           })
         );
         this.setState({ instaImages: finalImages });
-        console.log("this.state", this.state);
       }).catch(error => {
           console.log("first API error", mockData);
           this.setState({ instaImages: mockData.instaImages });

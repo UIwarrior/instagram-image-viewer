@@ -5,7 +5,6 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { withStyles } from "@material-ui/core/styles";
 
-
 const styles = (theme) => ({
     root: {
       padding: 5,
@@ -30,12 +29,10 @@ const styles = (theme) => ({
             verticalAlign: 'bottom'
         }
     }
-})
-
+});
 
 const ImageModalBody = (props) => {
     const { classes } = props;
-    console.log("props",props);
     return (
         <Grid container spacing={6}>
         <Grid item xs={6}>
