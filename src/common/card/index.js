@@ -49,44 +49,45 @@ const styles = (theme) => ({
 });
 
 const HomeCard = (props) => {
-  const { classes } = props;
+  //destrure all props except methods
+  const { classes, userName, date, media_url, caption, tags, likedFlag, likes, id, comments, commentInputValue  } = props;
   return (
     <Card className={classes.root}>
       <CardHeader
         avatar={
           <Avatar alt="AS" src={profileImage} />
         }
-        title={props.userName}
-        subheader={props.date}
+        title={userName}
+        subheader={date}
         className={classes.cardHeading}
       />
       <CardMedia
         className={classes.media}
-        image={props.media_url}
-        title={props.caption}
+        image={media_url}
+        title={caption}
       />
       <CardContent className={classes.cardContent}>
       <Typography variant="body2" color="textPrimary" component="p">
-          {props.caption}
+          {caption}
         </Typography>
         <Typography variant="body2" color="textSecondary" component="p">
-          {props.tags}
+          {tags}
         </Typography>
       </CardContent>
       <CardActions disableSpacing className={classes.favSection}>
-        <IconButton aria-label="add to favorites" onClick={() => props.incrementLikes(props.likes, props.id)}>
-          {!props.likedFlag && <FavoriteBorderIcon/>}
-          {props.likedFlag && <FavoriteIcon color="secondary"/>}
+        <IconButton aria-label="add to favorites" onClick={() => props.incrementLikes(likes, id)}>
+          {!likedFlag && <FavoriteBorderIcon/>}
+          {likedFlag && <FavoriteIcon color="secondary"/>}
       
         </IconButton>
-        <span>{props.likes} likes</span>
+        <span>{likes} likes</span>
       </CardActions>
       <CardActions disableSpacing className = {classes.addComment}>
-        <TextField value={props.commentInputValue} id="addCommentInput" label="Add a comment" onChange={(e) =>props.getComments(e.target.value, props.id)}/>
-        <Button variant="contained" color="primary" onClick ={() => props.addComment(props.id, props.userName)}>Add</Button>
+        <TextField value={commentInputValue} id="addCommentInput" label="Add a comment" onChange={(e) =>props.getComments(e.target.value, id)}/>
+        <Button variant="contained" color="primary" onClick ={() => props.addComment(id, userName)}>Add</Button>
       </CardActions>
       <Typography variant="body2" color="textPrimary" component="p">
-          {props.comments && props.comments.map(val => (
+          {comments && comments.map(val => (
             <Typography variant="subtitle1">{val.user}: {val.comment}</Typography>
           ))}
         </Typography>

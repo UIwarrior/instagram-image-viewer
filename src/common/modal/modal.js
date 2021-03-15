@@ -24,6 +24,12 @@ class ModalComponent extends React.Component {
     return Math.round(Math.random() * 20) - 10;
   }
 
+
+  /**
+   * Function to calculate top and left position for modal and set the styles for modal 
+   * @returns object containing css styles
+   */
+
   getModalStyle() {
     const top = 50 + this.rand();
     const left = 50 + this.rand();
