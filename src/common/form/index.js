@@ -85,6 +85,8 @@ class SignIn extends Component {
             return;
         }
     }
+    sessionStorage.setItem('access-token', credentials.accessToken);
+    sessionStorage.setItem('loggedIn', true);
     this.props.history.push("/home");
   }
 

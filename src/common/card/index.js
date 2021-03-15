@@ -12,7 +12,7 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { withStyles } from '@material-ui/core/styles';
 import profileImage from '../../assets/instaprofilepic.jpeg';
-import { Button, Grid, TextField } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 
 const styles = (theme) => ({
   root: {
@@ -81,7 +81,7 @@ const HomeCard = (props) => {
         <span>{props.likes} likes</span>
       </CardActions>
       <CardActions disableSpacing className = {classes.addComment}>
-        <TextField id="addCommentInput" label="Add a comment" onChange={(e) =>props.getComments(e.target.value)}/>
+        <TextField value={props.commentInputValue} id="addCommentInput" label="Add a comment" onChange={(e) =>props.getComments(e.target.value, props.id)}/>
         <Button variant="contained" color="primary" onClick ={() => props.addComment(props.id, props.userName)}>Add</Button>
       </CardActions>
       <Typography variant="body2" color="textPrimary" component="p">

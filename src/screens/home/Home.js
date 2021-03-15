@@ -31,14 +31,13 @@ class Home extends Component {
     this.state = {
       instaImages: [],
       mediaApiResponse: [],
-      comment: 'test comment'
+      commentInputValue: ""
     };
     this.incrementLikes = this.incrementLikes.bind(this);
     this.addComment = this.addComment.bind(this);
     this.callSearch = this.callSearch.bind(this);
     this.getComments = this.getComments.bind(this);
   }
-
 
   callSearch(e){
     if(e.target.value === null || e.target.value === ""){
@@ -84,10 +83,13 @@ class Home extends Component {
     return "";
   }
 
-  getComments(e){
-    this.setState({
-        comment:e
-    })
+  getComments(e, id){
+    let commentedImage = this.state.instaImages.find(val => val.id === id);
+    commentedImage.commentInputValue = e;
+        this.setState(prevState => ({
+          instaImages: [...prevState.instaImages, commentedImage],
+          commentInputValue: e
+        }));
   }
 
 
@@ -101,13 +103,14 @@ class Home extends Component {
   addComment(id, user){
     let commentedImage = this.state.instaImages.find(val => val.id === id);
     commentedImage.comments.push({
-        comment: this.state.comment,
+        comment: this.state.commentInputValue,
         user,
     });
+
+    commentedImage.commentInputValue = "";
     this.setState(prevState => ({
         instaImages: [...prevState.instaImages, commentedImage],
       }));
-      document.getElementById("addCommentInput").val = "";
   }
 
   incrementLikes(params, id){
@@ -159,6 +162,7 @@ class Home extends Component {
                   userName: imageDetails.username,
                   captionTags: this.getCaptionTags(imageDetails.id),
                   likedFlag: false,
+                  commentInputValue: this.state.commentInputValue
                 });
             }
             else{
@@ -197,7 +201,7 @@ class Home extends Component {
                   likedFlag ={val.likedFlag}
                   comments = {val.comments}
                   getComments = {this.getComments}
-                  comment={this.state.comment}
+                  commentInputValue ={val.commentInputValue}
                 />
               ))}
           </Grid>
