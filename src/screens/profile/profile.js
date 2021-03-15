@@ -255,7 +255,7 @@ class Profile extends Component {
     const { classes, history } = this.props;
     return (
       <React.Fragment>
-        <Header logoName="Image Viewer" history={history} />  
+        <Header logoName="Image Viewer" history={history} triggerSearch = {this.callSearch} />  
         <ModalComponent modalTitle="Edit" open ={this.state.editModalFlag} handleClose = {this.handleClose} size="sm">
             <TextField id="standard-basic" label="Full Name" required onChange ={this.changeNameHandler}/>
             <Button variant="contained" color="primary" onClick = {this.updateFullName} className={classes.updateButton}>
